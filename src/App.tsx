@@ -1,34 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css"
+import { useState, useEffect } from "react"
+import data from "../data.json"
+import YouTube, { YouTubeProps } from "react-youtube"
 
-function App() {
-  const [count, setCount] = useState(0)
+interface VideoData {
+  title: string
+  videoID: string
+}
+
+interface VideoDataArray {
+  data: VideoData[]
+}
+const YoutubeEmbed: React.FC<VideoDataArray> = ({ data }) => {
+  let currVideo = data[Math.floor(Math.random() * data.length)]
+
+  const opts: YouTubeProps["opts"] = {
+    playerVars: {
+      autoplay: 1,
+      controls: 0,
+      disablekb: 1,
+      modestbranding: 1,
+      rel: 0,
+    },
+  }
+
+  const onPlayerReady = (event: any) => {
+    const player = event.target
+    player.getIframe().autoplay = "allow"
+    player.setVolume(100)
+    event.target.playVideo()
+    currVideo = player.getVideoUrl()
+  }
+
+  const onEnd = (event: any) => {
+    currVideo = data[Math.floor(Math.random() * data.length)]
+    const player = event.target
+    player.loadVideoById(currVideo)
+    currVideo = player.getVideoUrl()
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='embedWrapper'>
+      <div className='videoWrapper'>
+        <div className="videoResponsive">
+          <YouTube videoId={currVideo.videoID} opts={opts} onReady={onPlayerReady} onEnd={onEnd} />
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <div className='page'>
+      <YoutubeEmbed data={data} />
+    </div>
   )
 }
 
