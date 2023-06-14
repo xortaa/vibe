@@ -1,0 +1,12 @@
+.video { 
+  min-height: 110vh;
+  display: grid;
+  place-items: center;
+  background-color: black;
+  pointer-events: none;
+}
+
+.video iframe { 
+  height: 100%;
+  width: 100%
+}

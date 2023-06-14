@@ -1,5 +1,6 @@
 import "./App.css"
 import data from "../data.json"
+import { useState, useEffect } from "react"
 import YouTube, { YouTubeProps } from "react-youtube"
 
 interface VideoData {
@@ -10,6 +11,7 @@ interface VideoData {
 interface VideoDataArray {
   data: VideoData[]
 }
+
 const YoutubeEmbed: React.FC<VideoDataArray> = ({ data }) => {
   let currVideo = data[Math.floor(Math.random() * data.length)]
 
@@ -27,7 +29,7 @@ const YoutubeEmbed: React.FC<VideoDataArray> = ({ data }) => {
     const player = event.target
     player.getIframe().autoplay = "allow"
     player.setVolume(100)
-    event.target.playVideo()
+    player.playVideo()
     currVideo = player.getVideoUrl()
   }
 
@@ -40,11 +42,7 @@ const YoutubeEmbed: React.FC<VideoDataArray> = ({ data }) => {
 
   return (
     <div className='embedWrapper'>
-      <div className='videoWrapper'>
-        <div className="videoResponsive">
-          <YouTube videoId={currVideo.videoID} opts={opts} onReady={onPlayerReady} onEnd={onEnd} />
-        </div>
-      </div>
+      <YouTube videoId={currVideo.videoID} opts={opts} onReady={onPlayerReady} onEnd={onEnd} className='video' />
     </div>
   )
 }
