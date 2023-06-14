@@ -1,5 +1,4 @@
 import "./App.css"
-import { useState, useEffect } from "react"
 import data from "../data.json"
 import YouTube, { YouTubeProps } from "react-youtube"
 
